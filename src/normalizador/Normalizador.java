@@ -26,13 +26,13 @@ public class Normalizador {
 				"E --> F"
 		};
 		
-		Set<FuncDep> fds = FuncDep.getSet(exprs);
-		Set<Attribute> atts = Attribute.getSet("A, B, C, D, E, F");
+		Set<DependenciaFuncional> fds = DependenciaFuncional.crearDependencia(exprs);
+		Set<Elemento> atts = Elemento.crearElemento("A, B, C, D, E, F");
 		
-		Set<Set<Attribute>> keys = Algos.keys(atts, fds);
+		Set<Set<Elemento>> keys = Algoritmos.llavesCandidatas(atts, fds);
 
 		System.out.println("Llaves Candidatas: ");
-		for(Set<Attribute> sa : keys){
+		for(Set<Elemento> sa : keys){
 			System.out.println(sa);
 		}
     }

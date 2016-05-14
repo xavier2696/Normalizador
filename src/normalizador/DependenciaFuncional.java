@@ -13,93 +13,93 @@ import java.util.Set;
  *
  * @author xavie
  */
-public class FuncDep {
+public class DependenciaFuncional {
     
-	public static class Builder{
-		private Set<Attribute> left;
-		private Set<Attribute> right;
+	public static class Constructor{
+		private Set<Elemento> left;
+		private Set<Elemento> right;
 		
-		public Builder(){
+		public Constructor(){
 			this.left = new HashSet<>();
 			this.right = new HashSet<>();
 		}
 		
 		
-		public FuncDep build(){
-			return new FuncDep(this.left, this.right);
+		public DependenciaFuncional construir(){
+			return new DependenciaFuncional(this.left, this.right);
 		}
 		
 		
-		public Builder left(Attribute... as){
+		public Constructor izquierda(Elemento as){
 			this.left.addAll(Arrays.asList(as));
 			return this;
 		}
 		
 		
-		public Builder left(Set<Attribute> as){
+		public Constructor izquierda(Set<Elemento> as){
 			this.left.addAll(as);
 			return this;
 		}
 		
 		
-		public Builder right(Attribute... as){
+		public Constructor derecha(Elemento as){
 			this.right.addAll(Arrays.asList(as));
 			return this;
 		}
 		
 		
-		public Builder right(Set<Attribute> as){
+		public Constructor derecha(Set<Elemento> as){
 			this.right.addAll(as);
 			return this;
 		}
 		
 	}
 	
-	public static Set<FuncDep> getSet(String exprs){
+	public static Set<DependenciaFuncional> crearDependencia(String exprs){
 		if(exprs.equals("")){
 			return new HashSet<>();
 		}
 		exprs = exprs.replaceAll("\\s+","");
-		return getSet(exprs.split(";"));
+		return crearDependencia(exprs.split(";"));
 	}
 	
 	
-	public static Set<FuncDep> getSet(String[] exprs){
-		Set<FuncDep> fds = new HashSet<>();
+	public static Set<DependenciaFuncional> crearDependencia(String[] exprs){
+		Set<DependenciaFuncional> fds = new HashSet<>();
 		for(String s : exprs){
-			fds.add(FuncDep.of(s));
+			fds.add(DependenciaFuncional.newDependencia(s));
 		}
 		return fds;
 	}
 	
 	
-	public static FuncDep of(String expr){
+	public static DependenciaFuncional newDependencia(String expr){
 		String[] halves = expr.split("-->");
-		return of(halves[0], halves[1]);
+		return newDependencia(halves[0], halves[1]);
 	}
 	
 	
-	public static FuncDep of(String left, String right){
+	public static DependenciaFuncional newDependencia(String left, String right){
 		left = left.replaceAll("\\s+","");
 		right = right.replaceAll("\\s+","");
 		String[] lefts = left.split(",");
 		String[] rights = right.split(",");
-		Builder bd = new Builder();
+		Constructor bd = new Constructor();
 		for(String s : lefts){
-			bd.left(Attribute.of(s));
+			bd.izquierda(new Elemento(s));
 		}
 		for(String s : rights){
-			bd.right(Attribute.of(s));
+			bd.derecha(Elemento.newElemento(s));
 		}
-		return bd.build();
+		return bd.construir();
 	}
 	
-	protected final Set<Attribute> left;
+	protected final Set<Elemento> left;
 	
-	protected final Set<Attribute> right;
+	protected final Set<Elemento> right;
 	
 	
-	public FuncDep(Set<Attribute> left, Set<Attribute> right){
+	public DependenciaFuncional(Set<Elemento> left, Set<Elemento> right){
 		this.left = new HashSet<>(left);
 		this.right = new HashSet<>(right);
 	}
@@ -110,45 +110,35 @@ public class FuncDep {
 		if(o == this){
 			return true;
 		}
-		if(!(o instanceof FuncDep)){
+		if(!(o instanceof DependenciaFuncional)){
 			return false;
 		}
-		FuncDep fd = (FuncDep)o;
+		DependenciaFuncional fd = (DependenciaFuncional)o;
 		return this.left.equals(fd.left) && this.right.equals(fd.right);
 	}
 	
 	
-	public Set<Attribute> getLeft(){
+	public Set<Elemento> getLeft(){
 		return new HashSet<>(this.left);
 	}
 	
 	
-	public Set<Attribute> getRight(){
+	public Set<Elemento> getRight(){
 		return new HashSet<>(this.right);
 	}
 	
-	@Override
-	public int hashCode(){
-		int result = 17;
-		for(Attribute at : this.left){
-			result = 31 * result + at.hashCode();
-		}
-		for(Attribute at : this.right){
-			result = 31 * result + at.hashCode();
-		}
-		return result;
-	}
+	
 	
 	@Override
 	public String toString(){
-		StringBuilder sb = new StringBuilder((this.left.size() + this.right.size()) * Attribute.AVERAGE_LENGTH);
-		for(Attribute at : this.left){
+		StringBuilder sb = new StringBuilder((this.left.size() + this.right.size()) * 10);
+		for(Elemento at : this.left){
 			sb.append(at.toString());
 			sb.append(", ");
 		}
 		sb.delete(sb.length() - 2, sb.length());
 		sb.append(" --> ");
-		for(Attribute at : this.right){
+		for(Elemento at : this.right){
 			sb.append(at.toString());
 			sb.append(", ");
 		}

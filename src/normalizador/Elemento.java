@@ -11,36 +11,36 @@ import java.util.Set;
  *
  * @author xavie
  */
-public class Attribute {
-    protected static final int AVERAGE_LENGTH = 10;
+public class Elemento {
+    //protected static final int AVERAGE_LENGTH = 10;
 	
 	
-	public static Set<Attribute> getSet(String names){
+	public static Set<Elemento> crearElemento(String names){
 		if(names.equals("")){
 			return new HashSet<>();
 		}
 		names = names.replaceAll("\\s+","");
-		return getSet(names.split(","));
+		return crearElemento(names.split(","));
 	}
 	
 	
-	public static Set<Attribute> getSet(String[] names){
-		Set<Attribute> attrs = new HashSet<>();
+	public static Set<Elemento> crearElemento(String[] names){
+		Set<Elemento> attrs = new HashSet<>();
 		for(String s : names){
-			attrs.add(Attribute.of(s));
+			attrs.add(Elemento.newElemento(s));
 		}
 		return attrs;
 	}
 	
 	
-	public static Attribute of(String name){
-		return new Attribute(name);
+	public static Elemento newElemento(String name){
+		return new Elemento(name);
 	}
 	
 	private final String name;
 	
 	
-	public Attribute(String name){
+	public Elemento(String name){
 		this.name = name;
 	}
 	
@@ -50,10 +50,10 @@ public class Attribute {
 		if(o == this){
 			return true;
 		}
-		if(!(o instanceof Attribute)){
+		if(!(o instanceof Elemento)){
 			return false;
 		}
-		Attribute a = (Attribute)o;
+		Elemento a = (Elemento)o;
 		return a.name.equals(this.name);
 	}
 	

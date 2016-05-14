@@ -15,14 +15,14 @@ import java.util.Set;
  *
  * @author xavie
  */
-public class Algos {
+public class Algoritmos {
     
-    public static Set<Set<Attribute>> keys(Set<Attribute> attrs, Set<FuncDep> fds){
-		Set<Set<Attribute>> superkeys = superKeys(attrs, fds);
-		Set<Set<Attribute>> toRemove = new HashSet<>();
-		for(Set<Attribute> key : superkeys){
-			for(Attribute a : key){
-				Set<Attribute> remaining = new HashSet<>(key);
+    public static Set<Set<Elemento>> llavesCandidatas(Set<Elemento> attrs, Set<DependenciaFuncional> fds){
+		Set<Set<Elemento>> superkeys = llaves(attrs, fds);
+		Set<Set<Elemento>> toRemove = new HashSet<>();
+		for(Set<Elemento> key : superkeys){
+			for(Elemento a : key){
+				Set<Elemento> remaining = new HashSet<>(key);
 				remaining.remove(a);
 				if(superkeys.contains(remaining)){
 					toRemove.add(key);
@@ -34,13 +34,13 @@ public class Algos {
 		return superkeys;
 	}
     
-    public static Set<Attribute> closure(Set<Attribute> attrs, Set<FuncDep> fds){
-		Set<Attribute> result = new HashSet<>(attrs);
+    public static Set<Elemento> dependientes(Set<Elemento> attrs, Set<DependenciaFuncional> fds){
+		Set<Elemento> result = new HashSet<>(attrs);
 		
 		boolean found = true;
 		while(found){
 			found = false;
-			for(FuncDep fd : fds){
+			for(DependenciaFuncional fd : fds){
 				if(result.containsAll(fd.left) && !result.containsAll(fd.right)){
 					result.addAll(fd.right);
 					found = true;
@@ -51,7 +51,7 @@ public class Algos {
 		return result;
 	}
     
-    public static <T> Set<Set<T>> powerSet(Set<T> originalSet) {
+    public static <T> Set<Set<T>> setPotencia(Set<T> originalSet) {
 	    Set<Set<T>> sets = new HashSet<>();
 	    if (originalSet.isEmpty()) {
 	    	sets.add(new HashSet<T>());
@@ -60,7 +60,7 @@ public class Algos {
 	    List<T> list = new ArrayList<>(originalSet);
 	    T head = list.get(0);
 	    Set<T> rest = new HashSet<>(list.subList(1, list.size()));
-	    for (Set<T> set : powerSet(rest)) {
+	    for (Set<T> set : setPotencia(rest)) {
 	    	Set<T> newSet = new HashSet<>();
 	    	newSet.add(head);
 	    	newSet.addAll(set);
@@ -70,22 +70,22 @@ public class Algos {
 	    //sets.remove(new HashSet<T>());
 	    return sets;
 	}
-    public static <T> Set<Set<T>> reducedPowerSet(Set<T> originalSet){
-		Set<Set<T>> result = powerSet(originalSet);
+    public static <T> Set<Set<T>> setPotenciaSinNulo(Set<T> originalSet){
+		Set<Set<T>> result = setPotencia(originalSet);
 		result.remove(new HashSet<T>());
 		return result;
 	}
-    public static Set<Set<Attribute>> superKeys(Set<Attribute> attrs, Set<FuncDep> fds){
-		Set<Set<Attribute>> keys = new HashSet<>();
+    public static Set<Set<Elemento>> llaves(Set<Elemento> attrs, Set<DependenciaFuncional> fds){
+		Set<Set<Elemento>> keys = new HashSet<>();
 		if(attrs.isEmpty()){
-			for(FuncDep fd : fds){
+			for(DependenciaFuncional fd : fds){
 				attrs.addAll(fd.left);
 				attrs.addAll(fd.right);
 			}
 		}
-		Set<Set<Attribute>> powerset = reducedPowerSet(attrs);
-		for(Set<Attribute> sa : powerset){
-			if(closure(sa, fds).equals(attrs)){
+		Set<Set<Elemento>> powerset = setPotenciaSinNulo(attrs);
+		for(Set<Elemento> sa : powerset){
+			if(dependientes(sa, fds).equals(attrs)){
 				keys.add(sa);
 			}
 		}
